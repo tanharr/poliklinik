@@ -1,8 +1,28 @@
+
 <?php
 include_once("koneksi.php");
+
+session_start();
+
+if (isset($_SESSION['username'])) {
+    if ($_SESSION['role'] === 'dokter' && (!isset($_GET['page']) || !in_array($_GET['page'], ['dokter', 'periksa']))) {
+        header('Location: index.php?page=dokter');
+        exit;
+    } elseif ($_SESSION['role'] === 'pasien' && (!isset($_GET['page']) || $_GET['page'] === 'dokter')) {
+        header('Location: index.php?page=pasien');
+        exit;
+    }
+}
+
+if (isset($_GET['page']) && $_GET['page'] === 'periksa' && empty($_SESSION['role'])) {
+    header('Location: index.php?page=periksa_table');
+    exit;
+}
 ?>
 
+
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -28,11 +48,6 @@ include_once("koneksi.php");
     </button>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="index.php">
-            Home
-          </a>
-        </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button"
           data-bs-toggle="dropdown" aria-expanded="false">
@@ -58,6 +73,19 @@ include_once("koneksi.php");
           </a>
         </li>
       </ul>
+      </div>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <?php
+                    if (isset($_SESSION['username'])) {
+                        echo '<a class="nav-link" href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>';
+                    } else {
+                        echo '<a class="nav-link" href="login.php"><i class="fas fa-sign-in-alt"></i> Login</a>';
+                    }
+                    ?>
+                </li>
+            </ul>
+        </div>
     </div>
   </div>
 </nav>
