@@ -1,21 +1,20 @@
-
 <?php
 include_once("koneksi.php");
 
 session_start();
 
 if (isset($_SESSION['username'])) {
-    if ($_SESSION['role'] === 'dokter' && (!isset($_GET['page']) || !in_array($_GET['page'], ['dokter', 'periksa']))) {
+    if ($_SESSION['role'] === 'dokter' && (!isset($_GET['page']) || !in_array($_GET['page'], ['dokter','pasien', 'periksa','detail_periksa','obat']))) {
         header('Location: index.php?page=dokter');
         exit;
-    } elseif ($_SESSION['role'] === 'pasien' && (!isset($_GET['page']) || $_GET['page'] === 'dokter')) {
+    } elseif ($_SESSION['role'] === 'pasien' && (!isset($_GET['page']) || !in_array($_GET['page'], ['pasien','periksa']))) {
         header('Location: index.php?page=pasien');
         exit;
     }
 }
 
 if (isset($_GET['page']) && $_GET['page'] === 'periksa' && empty($_SESSION['role'])) {
-    header('Location: index.php?page=periksa_table');
+    header('Location: index.php?page=periksa');
     exit;
 }
 ?>
@@ -64,6 +63,16 @@ if (isset($_GET['page']) && $_GET['page'] === 'periksa' && empty($_SESSION['role
                 Pasien
               </a>
             </li>
+            <li>
+              <a class="dropdown-item" href="index.php?page=obat">
+                Obat
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="index.php?page=detail_periksa">
+                Detail Periksa
+              </a>
+            </li>
           </ul>
         </li>
         <li class="nav-item">
@@ -101,7 +110,7 @@ if (isset($_GET['page']) && $_GET['page'] === 'periksa' && empty($_SESSION['role
     <?php
         include($_GET['page'] . ".php");
     } else {
-        echo "Selamat Datang di Sistem Informasi Poliklinik";
+        echo "Selamat Datang di Sistem Informasi Poliklinik Silakan untuk Login terlebih dahulu";
     }
     ?>
 </main>
